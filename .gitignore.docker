@@ -1,0 +1,19 @@
+# Git ignore pour Docker
+# Fichiers Docker à ignorer
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# Volumes Docker
+volumes/
+data/
+
+# Logs
+logs/
+*.log
+
+# Backup files
+*.sql
+backup/

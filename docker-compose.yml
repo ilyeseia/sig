@@ -1,0 +1,86 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgis/postgis:13-3.1
+    container_name: sig_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sig_db}
+      POSTGRES_USER: ${POSTGRES_USER:-sig_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Solution.2021!}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - sig-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sig_user} -d ${POSTGRES_DB:-sig_db}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./sig_backend
+      dockerfile: Dockerfile
+    container_name: sig_backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-sig_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-sig_user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-Solution.2021!}
+      JAVA_OPTS: ${JAVA_OPTS:--Xms2048m -Xmx4096m}
+      MAIL_HOST: ${MAIL_HOST:-mail.mjeunesse.gov.dz}
+      MAIL_PORT: ${MAIL_PORT:-465}
+      MAIL_USERNAME: ${MAIL_USERNAME:-no_reply_infs@mjeunesse.gov.dz}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-mWeR8Tx7kW-U}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sig-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Nuxt.js Frontend
+  frontend:
+    build:
+      context: ./sig_frontend
+      dockerfile: Dockerfile
+      args:
+        API_BASE_URL: ${API_BASE_URL:-http://localhost:8080}
+    container_name: sig_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:8080}
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - sig-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:80 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  sig-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
