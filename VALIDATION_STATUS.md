@@ -23,5 +23,8 @@ The second round of auditing and refactoring has successfully sanitized the inte
 ### 3. Documentation
 - [x] **CHANGELOG.md**: Updated with Round 2 fixes.
 
+### 4. Critical Fixes
+- [x] **Frontend Dependencies**: Restored missing `sig_frontend/package.json` file which was causing Docker build failures. Reconstructed dependencies based on `nuxt.config.js`.
+
 ## Conclusion
 The application is now significantly more secure. It is no longer possible to run the backend with "default" insecure credentials. Deployment now **requires** proper configuration management.
