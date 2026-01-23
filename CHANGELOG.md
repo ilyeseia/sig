@@ -9,12 +9,15 @@ All notable changes to this project will be documented in this file.
 - **CRITICAL**: Removed hardcoded default passwords from `docker-compose.yml`.
 - **CRITICAL**: Removed client-side exposure of database credentials (defaults) in `constants.js`.
 - **CRITICAL**: Removed exposure of PostGIS port 5432 to the host network.
+- **CRITICAL (Round 2)**: Removed hardcoded secrets (`Solution.2021!`, `secret-@-sercret`) from backend `src/main/resources/*.properties`.
+- **CRITICAL (Round 2)**: Removed insecure default values for environment variables in `application-docker.properties` (e.g., `${VAR:default}`).
 - Corrected internal hardcoded IP addresses in frontend constants.
 
 ### Changed
 - Refactored `GeoServerRest.java` to use stateless authentication methods.
 - Updated `docker-compose.yml` to strictly enforce environment variable usage for secrets.
 - Optimized `sig_backend/Dockerfile` to cache Gradle dependencies, speeding up rebuilds.
+- Disabled `spring.jpa.show-sql` in Docker/Production profile to prevent log leakage.
 - Updated documentation (`README.md`) to reflect security hardening.
 
 ### Removed
