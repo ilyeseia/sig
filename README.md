@@ -74,6 +74,8 @@ API_BASE_URL=http://localhost:8080
 ```
 
 ## 🔒 Sécurité
+**CRITIQUE:** Les mots de passe par défaut ont été SUPPRIMÉS du code.
+Vous DEVEZ configurer un fichier `.env` avec des mots de passe forts avant de démarrer.
 
 **IMPORTANT:** Ne commitez JAMAIS le fichier `.env` !
 
@@ -92,14 +94,14 @@ En cas de problème, consultez:
 ## ✅ Tests Effectués
 
 - ✅ Configuration Docker Compose validée
-- ✅ Dockerfiles optimisés (multi-stage builds)
+- ✅ Dockerfiles optimisés (multi-stage builds, mise en cache dépendances)
 - ✅ Health checks configurés
 - ✅ Dépendances résolues
+- ✅ Audit de sécurité effectué (Race conditions fixées, Secrets hardcodés supprimés)
 - ✅ Documentation complète
-- ⏳ Déploiement en attente
 
 ---
 
-**Version:** 1.0.0  
-**Date:** 2026-01-21  
-**Statut:** ✅ Prêt pour déploiement
+**Version:** 1.1.0  
+**Date:** 2026-01-23  
+**Statut:** ✅ Prêt pour production
