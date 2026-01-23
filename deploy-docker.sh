@@ -39,7 +39,8 @@ fi
 # Construire les images
 echo "[4/5] Construction des images Docker..."
 echo "   Ceci peut prendre 10-15 minutes..."
-docker-compose build
+docker compose build --no-cache frontend
+docker compose build
 
 if [ $? -ne 0 ]; then
     echo "✗ Erreur lors de la construction"
@@ -49,7 +50,7 @@ echo "✓ Images construites avec succès"
 
 # Démarrer les services
 echo "[5/5] Démarrage des services..."
-docker-compose up -d
+docker compose up -d
 
 if [ $? -ne 0 ]; then
     echo "✗ Erreur lors du démarrage"
@@ -75,4 +76,4 @@ echo ""
 
 # Attendre et vérifier
 sleep 5
-docker-compose ps
+docker compose ps
